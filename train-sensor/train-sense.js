@@ -64,7 +64,8 @@ function onSensor(data) {
 }
 
 // Record ultrasonic sensor activity
-function SyncoUltrasonicSensor(group_name, digital_port) {
+function UltrasonicSensor(position, digital_port) {
+  var group_name = "Station_" + position;
   var sensor = new UltrasonicDigitalSensor(digital_port);
   var name = group_name + '-Ultrasonic';
 
@@ -73,17 +74,20 @@ function SyncoUltrasonicSensor(group_name, digital_port) {
   var lastValue;
 
   sensor.on('change', function(res) {
+    var now = new Date();
     if (res !== false) {
       if (setupMode) {
         //console.log('initialvalue', res);
         initialValues[res] = true;
       } else if (!initialValues[res]) {
         //console.log(name, res);
+        console.log(name, now, res);
         lastValue = res;
+        /*
         collection.insert({
           "distance" : res,
           "datetime" : new Date()
-        });
+        });*/
       }
     }
   });
@@ -106,51 +110,33 @@ function SyncoUltrasonicSensor(group_name, digital_port) {
 }
 
 // Motion sensor module
-function SyncoMotionSensor(group_name, digital_port) {
+function MotionSensor(position, digital_port) {
+  var group_name = "Station_" + position;
   var sensor = new GPIO(digital_port, 'in', 'both');
   var name = group_name + '-Motion';
-
-  return {
-    name: name,
-    sensor: sensor
-  };
-}
-
-// Ultrasonic sensor module
-function SyncoSensor(position, motion_port, ultrasonic_port) {
-  var group_name = 'SyncoStairs_' + position;
-  var motion = SyncoMotionSensor(group_name, motion_port);
-  var ultrasonic;
-
-  if (ultrasonic_port) {
-    ultrasonic = SyncoUltrasonicSensor(group_name, ultrasonic_port);
-  }
+  var sensor_state = false;
 
   // watch for changes on ultrasonic readings
   function onWatch(err, state) {
     var collection = database.collection(group_name);
     var now = new Date();
     var data;
-    var distance;
     if (state) {
-      value = state;
-      if (ultrasonic) {
-        distance = ultrasonic.read();
-      }
-
-      if (!distance) {
-        distance = 0;
-      }
 
       data = {
         "datetime" : now,
         "distance" : distance
       };
-      console.log(group_name, now, distance);
-      collection.insert(data);
+      //console.log(group_name, now, data);
+      //collection.insert(data);
       data.position = position;
-      onSensor(data);
+      console.log(name, now, data);
+      //onSensor(data);
     } 
+  }
+
+  function getValue() {
+    return state;
   }
 
   // pass the callback function to the
@@ -160,10 +146,20 @@ function SyncoSensor(position, motion_port, ultrasonic_port) {
     if (!setupMode) {
       onWatch(err, state);
     }
+    sensor_state = state;
   });
+
+  return {
+    name: name,
+    read: function() { return getValue(); },
+    sensor: sensor
+  };
 }
 
-var sensors = [];
+var sensors = [
+  { name: 'North', pin: 18, type: MotionSensor },
+  { name: 'South', pin: 8, type: UltrasonicSensor }
+];
 var server;
 
 // Start communication with board, sensors and servers
@@ -179,8 +175,9 @@ function start(server_module) {
     },
     onInit: function(res) {
       if (res) {
-        //SyncoSensor('top', 4);
-        SyncoSensor('bottom', 18, 8);
+        for(var i = 0; i < sensors.length; i++) {
+          sensors[i].instance = sensors[i].type(sensors[i].name, sensors[i].pin);
+        }
 
         setTimeout(function() {
           console.log('End setup');
