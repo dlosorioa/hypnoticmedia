@@ -186,7 +186,7 @@ function start(live) {
 
     getSyncoDates(function(results) {
       console.log(results);
-      socket.emit('syncoDates', results);
+      // socket.emit('syncoDates', results);
     });
     
     socket.on('disconnect', function(){

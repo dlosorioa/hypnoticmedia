@@ -1,6 +1,6 @@
 
 window.onload = function(){
-  initLineCharts();
+  //initLineCharts();
 }
 
 var socket = io();
