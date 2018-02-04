@@ -1,0 +1,20 @@
+{
+  "name": "train-sense",
+  "version": "1.0.0",
+  "description": "",
+  "main": "train-sense.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "ip": "^1.1.3",
+    "mongodb": "^2.2.10",
+    "node-grovepi": "^2.0.9",
+    "onoff": "^1.1.1",
+    "socket.io": "^1.4.8",
+    "tingodb": "^0.4.2"
+  }
+}
