@@ -16,50 +16,14 @@ var UltrasonicDigitalSensor = GrovePi.sensors.UltrasonicDigital;
 var board;
 var lastReading;
 var stairsTimeThreshold;
-var ultrasonicThreshold = 700;
+var ultrasonicThreshold = 50;
 var setupMode = true;
-
-// Detect and register when a person has gone from one to the other sensor, and analize what direction the person is going
-function onPersonPassBy(final, initial) {
-  var syncoStairsCollection = database.collection(databasePeople);
-  var data = {
-    "datetime": final.datetime,
-    "time": final.datetime.getTime() - initial.datetime.getTime()
-  };
-  if (final.position == 'top') {
-    data.direction = 'up';
-    // Going up
-  } else {
-    // Going down
-    data.direction = 'down';
-  }
-
-  data.distance = final.distance ? final.distance : initial.distance;
-
-  console.log('######## A person passed by ' + data.direction + ' in ' + (data.time / 1000) + ' seconds, at ' + data.distance + ' cm');
-  syncoStairsCollection.insert(data);
-
-  if (server) {
-    server.update(data);
-  }
-}
 
 // Record motion sensor activity
 function onSensor(data) {
-  var syncoStairsCollection = database.collection(databaseName);
-  syncoStairsCollection.insert(data);
-
-  if (lastReading) {
-    if (data.datetime.getTime() - lastReading.datetime.getTime() < 2000) {
-      // Same person
-      onPersonPassBy(data, lastReading);
-
-      lastReading = null;
-    } else {
-      lastReading = data;
-    }
-  } else {
-    lastReading = data;
+  console.log('Update server', data, server);
+  if (server) {
+    server.update(data);
   }
 }
 
@@ -72,39 +36,34 @@ function UltrasonicSensor(position, digital_port) {
   var collection = database.collection(name);
   var initialValues = {};
   var lastValue;
+  var sensor_state = false;
 
   sensor.on('change', function(res) {
     var now = new Date();
+    var state = false;
     if (res !== false) {
       if (setupMode) {
         //console.log('initialvalue', res);
         initialValues[res] = true;
       } else if (!initialValues[res]) {
-        //console.log(name, res);
-        console.log(name, now, res);
-        lastValue = res;
-        /*
-        collection.insert({
-          "distance" : res,
-          "datetime" : new Date()
-        });*/
+        state = res < ultrasonicThreshold;
+        if (sensor_state !== state) {
+          sensor_state = state;
+          data = {
+            "name": name,
+            "position" : position,
+            "state" : state,
+            "datetime" : now
+          };
+          onSensor(data);
+        }
       }
     }
   });
   sensor.watch();
 
-  function getValue() {
-    var value = sensor.read();
-    if (value < lastValue) {
-      lastValue = value;
-    }
-
-    return lastValue;
-  }
-
   return {
     name: name,
-    read: function() { return getValue(); },
     sensor: sensor
   };
 }
@@ -118,40 +77,33 @@ function MotionSensor(position, digital_port) {
 
   // watch for changes on ultrasonic readings
   function onWatch(err, state) {
-    var collection = database.collection(group_name);
+    //var collection = database.collection(group_name);
     var now = new Date();
     var data;
-    if (state) {
 
+    if (sensor_state !== state) {
+      sensor_state = state;
       data = {
+        "name": name,
+        "position" : position
+        "state" : state,
         "datetime" : now,
-        "distance" : distance
       };
-      //console.log(group_name, now, data);
-      //collection.insert(data);
-      data.position = position;
-      console.log(name, now, data);
-      //onSensor(data);
-    } 
-  }
-
-  function getValue() {
-    return state;
+      onSensor(data);
+    }
   }
 
   // pass the callback function to the
   // as the first argument to watch() and define
   // it all in one step
-  motion.sensor.watch(function(err, state) {
+  sensor.watch(function(err, state) {
     if (!setupMode) {
       onWatch(err, state);
     }
-    sensor_state = state;
   });
 
   return {
     name: name,
-    read: function() { return getValue(); },
     sensor: sensor
   };
 }
