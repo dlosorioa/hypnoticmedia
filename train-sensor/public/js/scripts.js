@@ -198,17 +198,16 @@ socket.on('syncoUpdate', function(incomingData) {
   //resetLiveUpdate();
 
   console.log('syncoUpdate', incomingData);
-/*
-  if (incomingData.direction) {
-    liveSection.classList.add('update-' + incomingData.direction);
+  if (incomingData.name) {
+    var element = document.getElementById(incomingData.name.toLowerCase());
+    if (element) {
+      if (incomingData.state) {
+        element.classList.add('active');
+      } else {
+        element.classList.remove('active');
+      }
+    }
   }
-
-  if (incomingData.side) {
-    liveSection.classList.add('update-' + incomingData.side);
-  }
-
-  resetLiveUpdateTimer = setTimeout(resetLiveUpdate);
-*/
 });
 
 function getDataArray(data, variable) {
