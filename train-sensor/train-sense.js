@@ -45,7 +45,7 @@ function UltrasonicSensor(position, digital_port) {
       if (setupMode) {
         //console.log('initialvalue', res);
         initialValues[res] = true;
-      } else if (!initialValues[res]) {
+      } else {
         state = res < ultrasonicThreshold;
         if (sensor_state !== state) {
           sensor_state = state;
@@ -53,7 +53,8 @@ function UltrasonicSensor(position, digital_port) {
             "name": name,
             "position" : position,
             "state" : state,
-            "datetime" : now
+            "datetime" : now,
+            "distance": res
           };
           onSensor(data);
         }
@@ -85,7 +86,7 @@ function MotionSensor(position, digital_port) {
       sensor_state = state;
       data = {
         "name": name,
-        "position" : position
+        "position" : position,
         "state" : state,
         "datetime" : now,
       };
