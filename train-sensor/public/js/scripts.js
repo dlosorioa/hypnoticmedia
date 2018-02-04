@@ -176,6 +176,7 @@ function resetLiveUpdate() {
 }
 
 var resetLiveUpdateTimer;
+/*
 socket.on('syncoUpdate', function(incomingData) {
   var liveSection = document.querySelector('.online');
 
@@ -190,6 +191,24 @@ socket.on('syncoUpdate', function(incomingData) {
   }
 
   resetLiveUpdateTimer = setTimeout(resetLiveUpdate);
+});*/
+socket.on('syncoUpdate', function(incomingData) {
+  //var liveSection = document.querySelector('.online');
+
+  //resetLiveUpdate();
+
+  console.log('syncoUpdate', incomingData);
+/*
+  if (incomingData.direction) {
+    liveSection.classList.add('update-' + incomingData.direction);
+  }
+
+  if (incomingData.side) {
+    liveSection.classList.add('update-' + incomingData.side);
+  }
+
+  resetLiveUpdateTimer = setTimeout(resetLiveUpdate);
+*/
 });
 
 function getDataArray(data, variable) {

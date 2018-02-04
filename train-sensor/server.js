@@ -173,9 +173,9 @@ function start(live) {
     }
 
     function getSensorData(datetime) {
-      getSensorByDateByHour('bottom', datetime, sendSensorData);
-      getSensorByDateByHour('top', datetime, sendSensorData);
-      getPeopleByDateByHour(datetime, sendPeopleData);
+      // getSensorByDateByHour('bottom', datetime, sendSensorData);
+      // getSensorByDateByHour('top', datetime, sendSensorData);
+      // getPeopleByDateByHour(datetime, sendPeopleData);
     }
     
     socket.on('requestSyncoByDate', function(data){
@@ -198,15 +198,6 @@ function start(live) {
 
       module.exports.update = function (data) {
         console.log(':::::::: update');
-        getSensorData(new Date());
-
-        if (data.distance) {
-          if (data.distance < sideThreshold) {
-            data.side = 'right';
-          } else {
-            data.side = 'left';
-          }
-        }
         socket.emit('syncoUpdate', data);
       };
     }

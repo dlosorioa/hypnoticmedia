@@ -46,7 +46,7 @@ body > header h1 {
   margin: 0;
 }
 
-body > header .sensors-status span {
+body .sensors-status span {
   display: inline-block;
   height: 20px;
   width: 20px;
@@ -63,7 +63,7 @@ body > header .sensors-status {
   right: 20px;
 }
 
-body > header .sensors-status div {
+body .sensors-status div {
   display: inline-block;
 }
 
@@ -151,7 +151,8 @@ body.synco-online header .sensors-off {
   display: none;
 }
 
-body.synco-online header .sensors-status span {
+body.synco-online header .sensors-status span,
+body .sensors-status.active span {
   background: #0F0;
 }
 

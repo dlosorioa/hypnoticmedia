@@ -88,7 +88,7 @@ function MotionSensor(position, digital_port) {
         "name": name,
         "position" : position,
         "state" : state,
-        "datetime" : now,
+        "datetime" : now
       };
       onSensor(data);
     }

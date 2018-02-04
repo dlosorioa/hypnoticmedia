@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>5ynco Stairs Monitor</title>
+  <title>Train Sense Monitor</title>
   <link rel="stylesheet" href="styles">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
@@ -9,92 +9,21 @@
 </head>
 <body class="synco-online">
   <header>
-    <h1>5ynco Stairs</h1>
+    <h1>Train Sense</h1>
     <div class="sensors-status">
       <div class="sensors-off">OFF LINE</div>
       <div class="sensors-on">ON LINE</div>
       <span></span></div>
   </header>
   <main>
-    <section class="history">
-      <header>
-        <div class="dates">
-          Date: 
-          <select id="selectDates"></select>
-        </div>
-        <div class="legend">
-          <span class="stairs-icon both-icon">Total</span>
-          <span class="stairs-icon up-icon">Up</span>
-          <span class="stairs-icon down-icon">Down</span>
-        </div>
-      </header>
-
-      <div class="charts">
-        <div class="chart chart-full">
-          <canvas id="people-chart" height="200" width="600"></canvas>
-        </div>
-
-        <div class="sides">
-          <div class="left-side chart chart-left">
-          	<h3 class="label">Left side</h3>
-            <canvas id="left-chart" height="200" width="600"></canvas>
-          </div>
-
-          <div class="right-side chart chart-right">
-          	<h3 class="label">Right side</h3>
-            <canvas id="right-chart" height="200" width="600"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
     <section class="online">
-      <div class="stairs">
-        <h2>Direction</h2>
-        <canvas id="stairs-online-chart" height="75" width="200"></canvas>
-        <div class="online-item online-up">
-          <span class="stairs-icon up-icon"></span>
-          <div>
-            <div class="labels sides">
-              <div class="left-side">Left</div>
-              <div class="right-side">Right</div>
-            </div>
-            <div class="bar sides">
-              <div class="left-side">
-                <div class="value"><span></span>%</div>
-              </div>
-              <div class="right-side">
-                <div class="value"><span></span>%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="online-item online-down">
-          <span class="stairs-icon down-icon"></span>
-          <div>
-            <div class="labels sides">
-              <div class="left-side">Left</div>
-              <div class="right-side">Right</div>
-            </div>
-            <div class="bar sides">
-              <div class="left-side">
-                <div class="value"><span></span>%</div>
-              </div>
-              <div class="right-side">
-                <div class="value"><span></span>%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="sensors">
-        <h2>Sensors</h2>
-        <canvas id="sensors-online-chart" height="75" width="200"></canvas>
-        <div class="online-item online-up">
-          <span class="stairs-icon up-icon"></span>
-        </div>
-        <div class="online-item online-down">
-          <span class="stairs-icon down-icon"></span>
-        </div>
+      <div class="train">
+        <div class="sensors-status" id="north">
+          <div>North</div>
+          <span></span></div>
+        <div class="sensors-status" id="south">
+          <div>South</div>
+          <span></span></div>
       </div>
     </section>
   </main>
