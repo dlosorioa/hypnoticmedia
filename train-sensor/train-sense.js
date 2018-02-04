@@ -54,6 +54,7 @@ function UltrasonicSensor(position, digital_port) {
             "position" : position,
             "state" : state,
             "datetime" : now,
+            "type": 'Ultrasonic',
             "distance": res
           };
           onSensor(data);
@@ -88,7 +89,8 @@ function MotionSensor(position, digital_port) {
         "name": name,
         "position" : position,
         "state" : state,
-        "datetime" : now
+        "datetime" : now,
+        "type": 'Motion'
       };
       onSensor(data);
     }

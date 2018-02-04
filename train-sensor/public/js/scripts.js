@@ -198,8 +198,8 @@ socket.on('syncoUpdate', function(incomingData) {
   //resetLiveUpdate();
 
   console.log('syncoUpdate', incomingData);
-  if (incomingData.name) {
-    var element = document.getElementById(incomingData.name.toLowerCase());
+  if (incomingData.position) {
+    var element = document.getElementById(incomingData.position.toLowerCase());
     if (element) {
       if (incomingData.state) {
         element.classList.add('active');
